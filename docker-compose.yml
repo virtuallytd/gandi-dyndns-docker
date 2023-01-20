@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  gandi-dyndns:
+    image: ghcr.io/virtuallytd/gandi-dyndns:latest
+    environment:
+      - API_KEY=YOUR_API_KEY
+      - DOMAIN=YOUR_DOMAIN
+      - SUBDOMAIN=YOUR_SUBDOMAIN
+    restart: unless-stopped
