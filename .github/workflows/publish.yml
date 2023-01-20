@@ -1,24 +1,22 @@
-name: 'build'
-
 on:
   push:
     branches:
-    - master
-  pull_request:
+      - main
   workflow_dispatch:
 
 jobs:
   build:
-    name: 'Build'
     runs-on: ubuntu-latest
+
     steps:
-      - name: "Build:checkout"
-        uses: actions/checkout@v2
-      - name: 'Build:dockerimage'
-        uses: docker/build-push-action@v1
-        with:
-          registry: ghcr.io
-          username: "virtuallytd"
-          password: ${{ secrets.REPO_TOKEN }}
-          repository: virtuallytd/gandi-dyndns-docker
-          tags: latest
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        docker build -t gandi-dyndns .
+        docker tag gandi-dyndns ghcr.io/virtuallytd/gandi-dyndns:latest
+    - name: Log in to ghcr.io
+      run: echo ${{ secrets.REPO_TOKEN }} | docker login ghcr.io -u virtuallytd --password-stdin
+    - name: Publish Docker image
+      run: docker push ghcr.io/virtuallytd/gandi-dyndns:latest
